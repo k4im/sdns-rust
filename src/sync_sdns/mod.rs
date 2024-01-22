@@ -13,7 +13,6 @@ pub fn buscar_registros_ipv4(resolver: &Resolver, dominio: &String) {
             }
         }
     }
-    println!("");
 }
 
 pub fn buscar_registros_mx(resolver: &Resolver, dominio: &String) {
@@ -26,7 +25,6 @@ pub fn buscar_registros_mx(resolver: &Resolver, dominio: &String) {
             }
         }
     }
-    println!("");
 }
 
 pub fn buscar_registros_ns(resolver: &Resolver, dominio: &String) {
@@ -41,7 +39,6 @@ pub fn buscar_registros_ns(resolver: &Resolver, dominio: &String) {
 
         }
     }
-    println!("");
 }
 
 pub fn buscar_registros_txt(resolver: &Resolver, dominio: &String) {
@@ -54,5 +51,4 @@ pub fn buscar_registros_txt(resolver: &Resolver, dominio: &String) {
             } 
         } 
     }
-    println!("");
 }
