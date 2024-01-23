@@ -1,13 +1,7 @@
-use sync_sdns::buscar_registros_ipv4;
-use sync_sdns::buscar_registros_mx;
-use sync_sdns::buscar_registros_ns;
-use sync_sdns::buscar_registros_txt;
-use trust_dns_resolver::proto::rr::rdata::opt;
 use trust_dns_resolver::Resolver;
 use trust_dns_resolver::config::*;
 use std::env;
 use std::process::exit;
-use std::time::Duration;
 use std::time::Instant;
 mod sync_sdns;
 
@@ -23,12 +17,17 @@ fn main() {
     let start: Instant = Instant::now();
 
     match args.get(1).map(String::as_str) {
+        None => {
+            println!("Por favor insira um dominio");
+            exit(1);
+        },
         Some("--async") => {
-            // TODO
+            buscar_registros_async(args);
         },
         Some("-mx") => {
+            // Verifica se o o valor de dominio é existente
             if let Some(dominio) = args.get(2) {
-                buscar_registros_mx(&resolver, dominio);
+                sync_sdns::buscar_registros_mx(&resolver, dominio);
                 tempo_execucao(&start);
             }
             else {
@@ -36,8 +35,9 @@ fn main() {
             }
         },
         Some("-4") => {
+            // Verifica se o o valor de dominio é existente
             if let Some(dominio) = args.get(2) {
-                buscar_registros_ipv4(&resolver, dominio);
+                sync_sdns::buscar_registros_ipv4(&resolver, dominio);
                 tempo_execucao(&start);
             }
             else {
@@ -45,8 +45,9 @@ fn main() {
             }
         },
         Some("-ns") => {
+            // Verifica se o o valor de dominio é existente
             if let Some(dominio) = args.get(2) {
-                buscar_registros_ns(&resolver, dominio);
+                sync_sdns::buscar_registros_ns(&resolver, dominio);
                 tempo_execucao(&start);
             }
             else {
@@ -54,15 +55,18 @@ fn main() {
             }
         },
         Some("-txt") => {
+            // Verifica se o o valor de dominio é existente
             if let Some(dominio) = args.get(2) {
-                buscar_registros_txt(&resolver, dominio);
+                sync_sdns::buscar_registros_txt(&resolver, dominio);
                 tempo_execucao(&start);
             }
             else {
                 println!("Por favor, insira um dominio")    
             }        
         }
+        // Executa uma ação para todos os valores que não foram listados no Match
         Some(_) => {
+            // Verifica se o o valor de dominio é existente
             if let Some(dominio) = args.get(1) {
                 buscar_registros(&resolver, dominio);
                 tempo_execucao(&start);
@@ -71,22 +75,30 @@ fn main() {
                 println!("Por favor, insira um dominio")    
             }       
         }
-        None => {
-            println!("Por favor insira um dominio")
-        }
     }
 }
 
 fn buscar_registros(resolver: &Resolver, dominio: &String) {
-    buscar_registros_mx(resolver, dominio);
+    sync_sdns::buscar_registros_mx(resolver, dominio);
     println!("");
-    buscar_registros_ipv4(resolver, dominio);
+    sync_sdns::buscar_registros_ipv4(resolver, dominio);
     println!("");
-    buscar_registros_ns(resolver, dominio);
+    sync_sdns::buscar_registros_ns(resolver, dominio);
     println!("");
-    buscar_registros_txt(resolver, dominio);
+    sync_sdns::buscar_registros_txt(resolver, dominio);
 }
-
+fn buscar_registros_async(args: Vec<String>) {
+    match args.get(2).map(String::as_str) {
+        None => {},
+        Some("-mx") => {},
+        Some("-txt") => {},
+        Some("-ns") => {},
+        Some("-a") => {},
+        Some(_) => {
+            
+        }
+    }
+}
 fn tempo_execucao(start : &Instant) {
     let finished = start.elapsed();
     println!("");
