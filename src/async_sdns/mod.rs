@@ -33,7 +33,7 @@ pub fn buscar_enderecos_mx_async(runtime: &Runtime,
     let response = runtime.block_on(lookup_future_mx).into_iter().next();
     if let Some(mx) = response {
         for mx_addr in mx.as_lookup().records() {
-            print!("[IP]: ");
+            print!("[MX]: ");
             if let Some(mx_record) = mx_addr.clone().into_data() {
                 println!("{:?}", mx_record.as_mx().unwrap().exchange().to_string());
             }
@@ -65,7 +65,7 @@ pub fn buscar_enderecos_txt_async(runtime: &Runtime,
     let response = runtime.block_on(lookup_future_ns).into_iter().next();
     if let Some(txt) = response {
         for txt_value in txt.as_lookup().records() {
-            print!("[NS]: ");
+            print!("[TXT]: ");
             if let Some(txt_record) = txt_value.clone().into_data() {
                 println!("{:?}", txt_record.as_txt().unwrap().to_string())
             }
