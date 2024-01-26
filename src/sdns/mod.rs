@@ -1,9 +1,9 @@
 use tokio::runtime::Runtime;
-use trust_dns_resolver::{config::{ResolverConfig, ResolverOpts}, error::ResolveError, lookup::{MxLookup, NsLookup, TxtLookup}, lookup_ip::LookupIp, TokioAsyncResolver};
+use trust_dns_resolver::{config::{ResolverConfig, ResolverOpts}, error::ResolveError, lookup::{MxLookup, NsLookup, TxtLookup}, lookup_ip::LookupIp, name_server::{GenericConnector, TokioRuntimeProvider}, AsyncResolver, TokioAsyncResolver};
 
 pub fn efetuar_busca_mx(dominio: &String) { 
     let runtime: Runtime = Runtime::new().unwrap();
-    let resolver = runtime.block_on(async {
+    let resolver: AsyncResolver<GenericConnector<TokioRuntimeProvider>> = runtime.block_on(async {
         TokioAsyncResolver::tokio(
             ResolverConfig::default(),
             ResolverOpts::default())
