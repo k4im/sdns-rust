@@ -1,5 +1,5 @@
 use std::time::Instant;
-use std::env::{self, args};
+use std::env::{self};
 mod sdns;
 
 fn main() {

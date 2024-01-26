@@ -1,5 +1,5 @@
 use tokio::runtime::Runtime;
-use trust_dns_resolver::{config::{ResolverConfig, ResolverOpts}, error::ResolveError, lookup::{MxLookup, NsLookup, TxtLookup}, lookup_ip::LookupIp, proto::{op::response_code, Executor}, Name, Resolver, TokioAsyncResolver};
+use trust_dns_resolver::{config::{ResolverConfig, ResolverOpts}, error::ResolveError, lookup::{MxLookup, NsLookup, TxtLookup}, lookup_ip::LookupIp, TokioAsyncResolver};
 
 pub fn efetuar_busca_mx(dominio: &String) { 
     let runtime: Runtime = Runtime::new().unwrap();
