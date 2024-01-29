@@ -2,6 +2,7 @@ use std::time::Instant;
 use std::env::{self};
 mod sdns;
 
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let start: Instant = Instant::now();
