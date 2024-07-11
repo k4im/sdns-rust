@@ -28,19 +28,30 @@ pub fn execute(domain: &String) {
                 print!("[MX] => ");
                 if let Some(value) = mx
                 {
-                    let mx_register = value
+                    let has_records = value
                     .as_mx()
                     .try_unwrap();
-                    if let Some(value_register) = mx_register
+
+                    if let Some(value_register) = has_records
                     {
-                        let mx = value_register.exchange().to_string();
+                        let mx = value_register
+                        .exchange()
+                        .to_string();
+                    
                         println!("{:?}", mx)
                     }
-                } else {println!("Endereço de dominio não possui endereço MX");}
+                } else {println!("[{:?}], does not contains MX records.", domain);}
             }
+            print!("\n")
         },
-        Err(_e) => {
-            println!("Endereço de dominio não possui endereço MX");
+        Err(err) => 
+        {
+            if err.kind().to_string().contains("no record found for Query")
+            {
+                println!("[{:?}], does not contains MX records", domain);
+                return
+            }
+            println!("An internal error has ocurred: {:#?}", err.kind().to_string())
         }
 
     }

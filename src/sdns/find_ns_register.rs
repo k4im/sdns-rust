@@ -43,15 +43,16 @@ pub fn execute(domain: &String)
                 } else {println!("Dominio não possui registro NS.")}
                 
             }
+            println!("\n")
         }
         Err(err) => 
         {
             if err.kind().to_string().contains("no record found for Query")
             {
-                println!("Domain does not contains NS");
+                println!("[{:?}], does not contains NS records", domain);
                 return
             }
-            println!("{:#?}", err.kind().to_string())
+            println!("An internal error has ocurred: {:#?}", err.kind().to_string())
         }
     }
 }

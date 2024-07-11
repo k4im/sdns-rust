@@ -1,7 +1,8 @@
 use tokio::runtime::Runtime;
 use trust_dns_resolver::{config::{ResolverConfig, ResolverOpts}, error::ResolveError,  lookup_ip::LookupIp, TokioAsyncResolver};
+use try_unwrap::TryUnwrapOption;
 
-pub fn execute(dominio: &String) -> bool {
+pub fn execute(domain: &String) {
     let runtime: Runtime = Runtime::new().unwrap();
     let resolver = runtime.block_on(async {
         TokioAsyncResolver::tokio(
@@ -9,21 +10,50 @@ pub fn execute(dominio: &String) -> bool {
         ResolverOpts::default())
     });
 
-    let future_a = resolver.lookup_ip(dominio);
+    let future_a = resolver.lookup_ip(domain);
     let response: Result<LookupIp, ResolveError> = runtime.block_on(future_a);
     match response { 
-        Ok(a) => {
-            for a_values in a.as_lookup().records() {
+        Ok(a) => 
+        {
+            for a_values in a.as_lookup().records() 
+            {
                 print!("[IPV4] => ");
-                if let Some(a) = a_values.clone().into_data() {
-                    println!("{:?}", a.as_a().unwrap().0.to_string())
+                let has_records = a_values
+                .clone()
+                .into_data()
+                .try_unwrap();
+                
+                match has_records 
+                {
+                    Some(record) => 
+                    {
+                        let ip = record
+                        .as_a()
+                        .try_unwrap();
+                        if let Some(value) = ip 
+                        {
+                            let ip_addr = value.0.to_string();
+                            println!("{:?}", ip_addr);
+                        }
+                    
+                    }
+                    None => 
+                    {
+                        println!("{:?}, has no A records", domain)
+                 
+                    }
                 }
             }
-            return true;
+            print!("\n");
         },
-        Err(_e) => {
-            println!("Endereços de dominio não possui registros tipo A");
-            return false;
+        Err(err) => 
+        {
+            if err.kind().to_string().contains("no record found for Query")
+            {
+                println!("[{:?}], does not contains A records", domain);
+                return
+            }
+            println!("An internal error has ocurred: {:#?}", err.kind().to_string())
         }
     }
 }
