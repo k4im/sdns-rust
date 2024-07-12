@@ -1,71 +1,56 @@
-use std::time::Instant;
-use std::env::{self};
+use std::{time::Instant, vec};
+use args::Args;
+use clap::Parser;
 mod sdns;
-
+mod args;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let args: Args = Args::parse();
     let start: Instant = Instant::now();
-    match args.get(1).map(String::as_str){
-        None => {},
-        Some("-mx") => {
-            if let Some(dominio) = args.get(2) {
-                sdns::efetuar_busca_mx(dominio);
-                tempo_execucao(start)
-            }
-        },
-        Some("-txt") => {
-            if let Some(dominio) = args.get(2) {
-                sdns::efetuar_busca_txt(dominio);
-                tempo_execucao(start);
-            }else {
-                println!("Por favor informe um dominio valido")
-            }
-        },
-        Some("-4") => {
-            if let Some(dominio) = args.get(2) {
-                sdns::efetuar_busca_ipv4(dominio);
-                tempo_execucao(start);
-            } else {
-                println!("Por favor informe um dominio valido")
-            }
-        },
-        Some("-a") => {
-            if let Some(dominio) = args.get(2) {
-                sdns::efetuar_busca_ipv4(dominio);
-                tempo_execucao(start);
-            } else {
-                println!("Por favor informe um dominio valido")
-            }
-        },
-        Some("-ns") => {
-            if let Some(dominio) = args.get(2) {
-                sdns::efetuar_busca_ns(dominio);
-                tempo_execucao(start);
-            } else {
-                println!("Por favor informe um dominio valido")
-            }
-        },
-        Some(_) => {
-            if let Some(dominio) = args.get(1) {
-                sdns::efetuar_busca_ns(dominio);
-                println!("");
-                sdns::efetuar_busca_ipv4(dominio);
-                println!("");
-                sdns::efetuar_busca_txt(dominio);
-                println!("");
-                sdns::efetuar_busca_mx(dominio);
-                println!("");
-                tempo_execucao(start)
-            }else {
-                println!("Por favor informe um dominio valido")
-            }
-        },
-    }
+    let args_actiosn: Vec<(Option<&String>, fn(&String))> = vec![
+        (args.name_server.as_ref(), execute_ns_lookup),
+        (args.ipv4.as_ref(), execute_ipv4_lookup),
+        (args.txt.as_ref(), execute_txt_lookup),
+        (args.mx.as_ref(), execute_mx_lookup),
 
+        (args.domain.as_ref(), execute_ipv4_lookup),
+        (args.domain.as_ref(), execute_ns_lookup),
+        (args.domain.as_ref(), execute_mx_lookup),
+        (args.domain.as_ref(), execute_txt_lookup),
+    ];
+    let mut _executed = false;
+    for (arg, action) in args_actiosn 
+    { 
+        if let Some(value) = arg
+        {
+            action(&value);
+            _executed = true;
+        }
+    }
+    execute_time(start);
+}
+fn execute_ns_lookup(domain: &String)
+{
+    sdns::find_ns_register
+    ::execute(domain);
+}
+fn execute_txt_lookup(domain: &String)
+{
+    sdns::find_txt_register
+    ::execute(domain);
 }
 
-fn tempo_execucao(start: Instant) {
+fn execute_mx_lookup(domain: &String)
+{
+    sdns::find_mx_register
+    ::execute(domain);
+}
+fn execute_ipv4_lookup(domain: &String) 
+{
+    sdns::find_ipv4_register
+    ::execute(domain);
+}
+fn execute_time(start: Instant) {
     println!("Executado em: [{}ms]", 
     (start.elapsed().as_secs() + (start.elapsed().subsec_nanos() / 1_000_000) 
     as u64));

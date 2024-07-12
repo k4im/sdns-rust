@@ -1,6 +1,8 @@
 [package]
 name = "sdns"
-version = "0.1.0"
+author = "João Victor"
+description = "Através deste software será possivel estar realizando a operação de estar efetuando a busca de registros de DNS para um determinado dominio."
+version = "1.0.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,3 +10,5 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 trust-dns-resolver = "*"
+clap = { version = "4.5.9", features = ["derive"]}
+try-unwrap = "1.0.0"
