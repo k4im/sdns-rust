@@ -66,7 +66,7 @@ sdns --txt exemplo.com
 Para buildar o projeto rode o comando abaixo:
 
 ```bash
-  cargo b -q -r
+cargo b -q -r
 ```
 
 
