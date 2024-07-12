@@ -12,7 +12,8 @@ Através deste software é possivel estar realizando buscas de registros de DNS 
 - [@k4im](https://www.github.com/k4im)
 
 ## Exemplo
-![image](https://github.com/user-attachments/assets/75d0bff1-a06b-43fd-9e14-5fa3e7eb8926)
+![Peek 2024-07-12 10-36](https://github.com/user-attachments/assets/704173f6-b928-40c9-b4eb-9a666be5b581)
+
 
 ## Releases
 Para baixar diretamente o binario para linux:
