@@ -16,9 +16,10 @@ Através deste software é possivel estar realizando buscas de registros de DNS 
 
 
 ## Releases
-Para baixar diretamente o binario para linux:
+Para baixar diretamente o binario ou executavel:
 
 [Linux-Version](https://github.com/k4im/sdns-rust/releases/download/v1.0.0/sdns)
+
 [Windows-Version](https://github.com/k4im/sdns-rust/releases/download/v1.0.0/sdns.exe)
 ## Build
 
